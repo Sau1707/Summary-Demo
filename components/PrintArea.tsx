@@ -1,0 +1,138 @@
+/* eslint-disable react/no-direct-mutation-state */
+import { Component, createRef } from 'react'
+
+import Page from './Page'
+import styles from './PrintArea.module.css'
+
+interface Props {
+    children: JSX.Element[]
+}
+
+/* id is an unique identifier for the element */
+type Coord = {
+    x: number
+    y: number
+}
+type Pos = {
+    [id: string]: Coord
+}
+
+export default class Example extends Component<Props> {
+    state = {
+        pages: null,
+        firstRender: true,
+        arrays: [],
+    };
+
+    arrays: Array<Array<JSX.Element>> = []
+    oldPos: Pos = {}
+
+    myRef = createRef<HTMLDivElement>()
+
+    /* Make the component mount for the first line, in order to calculate the other array */
+    componentDidMount() {
+        this.calculateArrays()
+    }
+
+    /* Handle rerender to behave like first render */
+    shouldComponentUpdate() {
+        if (this.state.pages == null) return true
+        if (this.state.pages != null && !this.state.firstRender) {
+            this.state.pages = null
+            this.state.firstRender = true
+            //this.storePos()
+            return true
+        }
+        return false
+    }
+
+    /* Once the componente update, change the */
+    componentDidUpdate() {
+        if (this.state.firstRender && this.state.pages) {
+            this.state.firstRender = false;
+            this.animate()
+            this.storePos()
+            return
+        }
+        this.calculateArrays()
+    }
+
+
+    /* Render the remaining pages */
+    renderContent() {
+        return (
+            <>
+                {this.state.arrays.map((el: Array<JSX.Element>, i: number) => {
+                    return <Page key={i} > {el} </Page>
+                })
+                }
+            </>)
+    }
+
+    calculateArrays() {
+        this.arrays = []
+        const elements = this.myRef.current!.children[0].children // get all elements render in h
+        var temp: Array<JSX.Element> = []
+        var n = 1
+        Array.from(elements).forEach((e: any, i: number) => {
+            if (e.offsetLeft > 1095 * n) {
+                this.arrays.push(temp)
+                temp = []
+                n += 1
+            }
+            temp.push(this.props.children[i])
+        })
+        this.arrays.push(temp)
+        this.setState({ pages: 1, arrays: this.arrays })
+    }
+
+    /* Calculate all the elements position and store in this.oldPos */
+    storePos() {
+        Array.from(this.myRef.current!.children).map(i => {
+            Array.from(i.children).map(e => {
+                var el = document.getElementById(e.id)
+                if (!el) return
+                var rect = el.getBoundingClientRect()
+                this.oldPos[e.id] = {
+                    x: rect.x,
+                    y: rect.y
+                }
+            })
+        })
+    }
+
+    /* */
+    animate() {
+        if (Object.keys(this.oldPos).length === 0) return;
+        Array.from(this.myRef.current!.children).map(i => {
+            Array.from(i.children).map(e => {
+                const current = e.getBoundingClientRect()
+                const last = this.oldPos[e.id]
+                if (!last) return // if the element don't exist before 
+                const [changeX, changeY] = [last.x - current.x, last.y - current.y]
+                if (!changeY) return;
+
+                requestAnimationFrame(() => {
+                    var el = document.getElementById(e.id)
+                    if (!el) return
+                    el.style.transform = `translateX(${changeX}px) translateY(${changeY}px)`;
+                    el.style.transition = "transform 0s";
+
+                    requestAnimationFrame(() => {
+                        if (!el) return
+                        el.style.transform = "";
+                        el.style.transition = "transform 500ms";
+                    })
+                })
+            })
+        })
+    }
+
+    /* Render function */
+    render() {
+        return (
+            <div ref={this.myRef} id="printContainer" className={styles.container}>
+                {!this.state.pages ? <Page> {this.props.children} </Page> : this.renderContent()}
+            </div>)
+    }
+}

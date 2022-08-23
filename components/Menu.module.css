@@ -1,0 +1,92 @@
+/* Handle menù open animation */
+.mainBoxOpen {
+    position: relative;
+    width: 400px;
+    height: 100vh;
+	animation: open-animate 0.5s ease-in;
+}
+@keyframes open-animate {
+	from {width: 60px}
+	to {width: 400px}
+}
+
+/* Handle menù close animation */
+.mainBoxClose {
+    position: relative;
+    width: 60px;
+    height: 100vh;
+    animation: close-animate 0.4s ease-out;
+}
+
+@keyframes close-animate {
+	from {width: 400px}
+	to {width: 60px}
+}
+
+/* Fixed menù */
+.fixed {
+    position: fixed;
+    height: 100%;
+    background-color: #3B444B;
+    padding-top: 100px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+.fixedOpen {
+    width: 400px;
+    animation: open-animate 0.5s ease-in;
+}
+
+.fixedClose {
+    width: 60px;
+    animation: close-animate 0.4s ease-out;
+}
+
+
+/* Trigger with animations */
+.trigger {
+    position: absolute;
+    top: 20px;
+    width: 0; 
+    height: 0; 
+    border-top: 15px solid transparent;
+    border-bottom: 15px solid transparent;
+    border-left: 40px solid rgb(160, 160, 160);
+    cursor: pointer;
+    z-index: 10;
+}
+
+.triggerOpen {
+    animation: spinOpen 0.4s ease-out;
+    transform: rotate(0deg);
+    left: 10px
+}
+
+.triggerClose {
+    animation: spinClose 0.5s ease-in;
+    transform: rotate(180deg); 
+    left: 340px
+}
+
+@keyframes spinOpen { 
+    0% {
+        transform: rotate(180deg);
+        left: 340px
+    }
+    100% { 
+        transform: rotate(0deg); 
+        left: 10px
+    } 
+}
+
+@keyframes spinClose { 
+    0% {
+        transform: rotate(0deg);
+        left: 10px
+    }
+    100% { 
+        transform: rotate(180deg);
+        left: 340px
+    } 
+}
+
