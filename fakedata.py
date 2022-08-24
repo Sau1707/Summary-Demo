@@ -9,7 +9,7 @@ def generateElement(index):
         "id": str(uuid.uuid4()),
         "height": random.randint(30, 100),
         "color": "#"+''.join([random.choice('0123456789ABCDEF') for j in range(6)]),
-        "number": index
+        "text": index
     }
     return element
 

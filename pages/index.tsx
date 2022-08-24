@@ -1,20 +1,16 @@
 /* eslint-disable react/no-direct-mutation-state */
 import { Component } from 'react'
-import PrintArea from '../components/PrintArea'
-import Title from '../components/Title'
 import { v4 as uuidv4 } from 'uuid';
 
-import { insertAndRemove, getIndex, getElement, insertInList } from "../helpers/arrayUtil"
-import data from "../data.json"
+import PrintArea from '../components/PrintArea'
+import Box from '../components/Box' // da cambiare
+
 import Menu from '../components/Menu'
+
+import { DummyType } from '../components/Dummy';
 
 /* Import types */
 import { Element } from "../types/Element"
-
-interface Istate {
-    elements: Array<Element>,
-    drag?: Element | null
-}
 
 /* 
     Elements in menù esist once
@@ -22,11 +18,14 @@ interface Istate {
 */
 const ELEMENTS = ["title"]
 
-export default class Home extends Component<Istate> {
-    state = {
-        elements: data,
-        drag: {} as Element
-    }
+/*  Main index file */
+import { ElementsList } from '../components/ElementsList';
+
+export default class Home extends Component {
+    static contextType = ElementsList
+    context!: React.ContextType<typeof ElementsList>;
+
+    drag = {} as Element
 
     constructor(props: any) {
         super(props);
@@ -36,27 +35,26 @@ export default class Home extends Component<Istate> {
     onDragStart(i: string) {
         /* Check if element is not dragged from title */
         let dragElement: Element
-        if (!ELEMENTS.includes(i)) dragElement = getElement(this.state.elements, i) as Element // this line might broke
+        if (!ELEMENTS.includes(i)) dragElement = this.context.getElement(i) as Element // this line might broke
         else dragElement = this.createElement(i) as unknown as Element
-        this.state.drag = dragElement
+        this.drag = dragElement
     }
 
     handleDrag(e: React.DragEvent<HTMLDivElement>) {
         const target = e.target as HTMLTextAreaElement;
         /* If event is on current element, nothing has to happend */
-        if (this.state.drag.id == target.id) return
+        if (this.drag.id == target.id) return
         const targetPos = target.getBoundingClientRect()
         const overflow = targetPos.y + targetPos.height / 2 - e.pageY > 0
-        const targetIndex = getIndex(this.state.elements, target.id)
+        const targetIndex = this.context.getIndex(target.id)
 
         if (!targetIndex) return
 
-        const dragIndex = getIndex(this.state.elements, this.state.drag.id) // get index of drag element in array
+        const dragIndex = this.context.getIndex(this.drag.id) // get index of drag element in array
         if (dragIndex! - targetIndex! == -1 * (overflow ? 1 : -1)) return // if prec or next
-        var copy = insertAndRemove([...this.state.elements], this.state.drag, targetIndex! + (overflow ? 0 : 1))
+        var copy = this.context.insertAndRemove(this.drag, targetIndex! + (overflow ? 0 : 1))
         /* Update array */
-        this.setState({ elements: copy })
-        console.log(copy)
+        this.context.setList(copy)
     }
 
     createElement(type: string) {
@@ -72,32 +70,31 @@ export default class Home extends Component<Istate> {
         return (
             <div style={{ width: "100%", display: "inline-flex" }}>
                 <Menu>
-                    <Title
+                    <Box
                         onDrag={() => this.onDragStart("title")}
                         onDragOver={(e: React.DragEvent<HTMLDivElement>) => {
                             this.handleDrag(e)
                         }}
-                        height={100}
-                        color={"#181818"}
-                        text={"demo"}
-                    />
+                        element={DummyType}
+                    >
+                    </Box>
                 </Menu>
                 <PrintArea>
-                    {this.state.elements.map(e => {
+                    {this.context.list.map(e => {
                         return (
-                            <Title
+                            <Box
                                 onDrag={this.onDragStart}
                                 onDragOver={(e: React.DragEvent<HTMLDivElement>) => {
                                     this.handleDrag(e)
                                 }}
                                 key={e.id}
-                                id={e.id}
-                                text={e.number}
-                                height={e.height}
-                                color={e.color}
-                            />)
+                                element={DummyType}
+                                data={e}
+                            >
+                            </Box>)
                     })}
                 </PrintArea>
-            </div >)
+            </div >
+        )
     }
 }
