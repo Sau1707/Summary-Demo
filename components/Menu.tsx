@@ -1,6 +1,13 @@
 import style from "./Menu.module.css"
 import { useState } from "react"
 
+/* 
+    Side Menu
+
+    TO DO: Import file containg elements in menù and render them
+    TO DO: Helpers tools like 3 -> 4 layout 
+*/
+
 export default function Menu(props: any) {
 
     const [open, setOpen] = useState(false)
@@ -8,8 +15,7 @@ export default function Menu(props: any) {
     return (
         <div className={open ? style.mainBoxOpen : style.mainBoxClose}>
             <div className={`${style.fixed} ${open ? style.fixedOpen : style.fixedClose}`}>
-                <div onClick={() => setOpen(!open)} className={`${style.trigger} ${open ? style.triggerClose : style.triggerOpen}`}>
-                </div>
+                <div onClick={() => setOpen(!open)} className={`${style.trigger} ${open ? style.triggerClose : style.triggerOpen}`}></div>
                 {props.children}
             </div>
         </div>

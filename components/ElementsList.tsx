@@ -2,6 +2,7 @@ import { createContext, useState, useEffect } from "react"
 
 /* 
     Main provider for the elements list, this component shuld do: 
+    
     0) Provide util function to edit and find elements in list
     1) Pass list to children with provider, the list is a state, update it means rerender the document
     2) Save new version on list update
@@ -10,6 +11,7 @@ import { createContext, useState, useEffect } from "react"
 // for demo
 import data from "../data.json"
 
+// TO DO: Remove generic Function type and add proper typeing 
 export type ElementType = {
     list: Array<any>,
     setList: Function
@@ -83,7 +85,7 @@ export default function ElementContext(props: any) {
 
     // TO DO: save new file version
     useEffect(() => {
-        console.log("List has updated")
+        //console.log("List has updated")
     }, [list])
 
     return (

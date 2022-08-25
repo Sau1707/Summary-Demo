@@ -7,7 +7,7 @@ import Box from '../components/Box' // da cambiare
 
 import Menu from '../components/Menu'
 
-import { DummyType } from '../components/Dummy';
+import { DummyType } from '../elements/Dummy';
 
 /* Import types */
 import { Element } from "../types/Element"

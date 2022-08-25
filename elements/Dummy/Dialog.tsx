@@ -102,7 +102,6 @@ export default function DummyDialog(props: any) {
                 <div style={{ margin: "auto", width: 354.35 }}>
                     <Demo height={height} color={`#${color.hex}`} text={text}></Demo>
                 </div>
-
             </DialogContent >
         </Dialog>
 

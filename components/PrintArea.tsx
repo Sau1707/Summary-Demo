@@ -1,12 +1,31 @@
 /* eslint-disable react/no-direct-mutation-state */
 import { Component, createRef } from 'react'
-
 import Page from './Page'
-import styles from './PrintArea.module.css'
+import style from './PrintArea.module.css'
 
-interface Props {
-    children: JSX.Element[]
-}
+/* 
+    Print area box, steps:
+    1) Render the entire context in a single page and oveflow the page,
+    this has to be done since it's impossible to know the height of an element before
+    has been added to the DOM.
+    2) Once the entire list is rendered, the position of the element are taken and new
+    sublist for elements to fit a single page are calculated
+    3) Multiple pages are created and rendered with only the elements that fit the page
+
+    To create animation:
+    1) The posizion of all the elements are stored in an array 
+    2) Once the page update, the new elements are moved to the old position and a transition effect if
+    given to them
+    3) The new position is stored for the next update
+
+    TO DO: When the page is scrolled the position of the elements break since it's relative to the view
+    of the page
+
+    TO DO: Theoretically the first render can be done without displaying the elements to speed up the timing
+    TO DO: The elements once rendered can be stored with useMemo 
+*/
+
+
 
 /* id is an unique identifier for the element */
 type Coord = {
@@ -15,6 +34,10 @@ type Coord = {
 }
 type Pos = {
     [id: string]: Coord
+}
+
+interface Props {
+    children: JSX.Element[]
 }
 
 export default class Example extends Component<Props> {
@@ -40,13 +63,12 @@ export default class Example extends Component<Props> {
         if (this.state.pages != null && !this.state.firstRender) {
             this.state.pages = null
             this.state.firstRender = true
-            //this.storePos()
             return true
         }
         return false
     }
 
-    /* Once the componente update, change the */
+    /* Once the component update, check if animation has to be done */
     componentDidUpdate() {
         if (this.state.firstRender && this.state.pages) {
             this.state.firstRender = false;
@@ -62,18 +84,20 @@ export default class Example extends Component<Props> {
     renderContent() {
         return (
             <>
-                {this.state.arrays.map((el: Array<JSX.Element>, i: number) => {
-                    return <Page key={i} > {el} </Page>
-                })
+                {
+                    this.state.arrays.map((el: Array<JSX.Element>, i: number) => {
+                        return <Page key={i} > {el} </Page>
+                    })
                 }
-            </>)
+            </>
+        )
     }
 
     calculateArrays() {
         this.arrays = []
         const elements = this.myRef.current!.children[0].children // get all elements render in h
-        var temp: Array<JSX.Element> = []
-        var n = 1
+        let temp: Array<JSX.Element> = []
+        let n = 1
         Array.from(elements).forEach((e: any, i: number) => {
             if (e.offsetLeft > 1095 * n) {
                 this.arrays.push(temp)
@@ -131,8 +155,9 @@ export default class Example extends Component<Props> {
     /* Render function */
     render() {
         return (
-            <div ref={this.myRef} id="printContainer" className={styles.container}>
+            <div ref={this.myRef} id="printContainer" className={style.container}>
                 {!this.state.pages ? <Page> {this.props.children} </Page> : this.renderContent()}
-            </div>)
+            </div>
+        )
     }
 }

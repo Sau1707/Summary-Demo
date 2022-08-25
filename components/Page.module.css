@@ -1,0 +1,27 @@
+.printPage {
+    transform: scale(1);
+    background-color: white;
+    margin: 10px;
+    padding: 0.4cm;
+    border: 0.05cm solid rgb(0, 0, 0);
+    /* Set fix height otherwise col bug*/
+    height: 21.1cm;
+    width: 29.85cm;
+
+    /* Column settings */
+    column-count: 3;
+    column-rule: 2px solid black;
+    overflow: visible;
+
+    /* Spam component until the end*/
+    column-fill: auto;
+    -webkit-column-fill: auto;
+    -moz-column-fill: auto;
+}
+
+.printPage div {
+    /* Avoid breaks */
+    -webkit-column-break-inside: avoid;
+    page-break-inside: avoid;
+    break-inside: avoid;
+}
