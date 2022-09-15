@@ -32,6 +32,7 @@
     padding-left: 20px;
     padding-right: 20px;
 }
+
 .fixedOpen {
     width: 400px;
     animation: open-animate 0.5s ease-in;
@@ -90,3 +91,33 @@
     } 
 }
 
+/* Menù buttons */
+.buttonsOpen {
+    overflow: hidden;
+    top: 20px;
+    position: fixed;
+    width: 300px;
+    height: fit-content;
+    animation: buttonsOpen 1s ease-out;
+    color: white;
+}
+
+@keyframes buttonsOpen  {
+    0% { width: 0px }
+    100% { width: 300px } 
+}
+
+.buttonsClose {
+    overflow: hidden;
+    top: 20px;
+    position: fixed;
+    width: 0px;
+    height: fit-content;
+    animation: buttonsClose 0.4s ease-out;
+}
+
+
+@keyframes buttonsClose {
+    0% { width: 300px } 
+    100% { width: 0px } 
+}
