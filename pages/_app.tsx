@@ -1,12 +1,12 @@
 import '../styles/globals.css'
 import type { AppProps } from 'next/app'
-import ElementContext from '../components/ElementsList';
+import GlobalData from '../logic/Contex';
 
 function MyApp({ Component, pageProps }: AppProps) {
     return (
-        <ElementContext>
+        <GlobalData>
             <Component {...pageProps} />
-        </ElementContext>
+        </GlobalData>
     )
 }
 

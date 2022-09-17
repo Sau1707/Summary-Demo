@@ -13,8 +13,8 @@ def generateElement(index):
     }
     return element
 
-with open("data.json", "r+") as file:
+with open("title.json", "r+") as file:
     lista = []
-    for i in range(60):
+    for i in range(5):
         lista.append(generateElement(i))
     json.dump(lista, file, indent=4)

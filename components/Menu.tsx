@@ -1,15 +1,8 @@
 import style from "./Menu.module.css"
-import { useState } from "react"
-import { ToggleButton, ToggleButtonGroup } from "@mui/material"
-import PrintIcon from '@mui/icons-material/Print';
-import Filter3Icon from '@mui/icons-material/Filter3';
-import Filter4Icon from '@mui/icons-material/Filter4';
-import FileDownloadIcon from '@mui/icons-material/FileDownload';
+import { useState, useContext } from "react"
+import { GlobalDataContext } from "../logic/Contex";
 
-import FormatAlignLeftIcon from '@mui/icons-material/FormatAlignLeft';
-import FormatAlignCenterIcon from '@mui/icons-material/FormatAlignCenter';
-import FormatAlignRightIcon from '@mui/icons-material/FormatAlignRight';
-import FormatAlignJustifyIcon from '@mui/icons-material/FormatAlignJustify';
+import Box from "./Box";
 
 /* 
     Side Menu
@@ -18,32 +11,40 @@ import FormatAlignJustifyIcon from '@mui/icons-material/FormatAlignJustify';
     TO DO: Helpers tools like 3 -> 4 layout 
 */
 
-export default function Menu(props: any) {
-
+export default function Menu() {
+    const [context] = useContext(GlobalDataContext);
     const [open, setOpen] = useState(false)
+
+    const DefaultElements = []
+
+    for (let key in context.titleList) {
+        DefaultElements.push(
+            <Box
+                key={Math.random()}
+                element={context.titleList[key]}
+                data={{
+                    text: "Demo",
+                    height: 100,
+                    color: "#171717"
+                }}
+            />
+        )
+    }
 
     return (
         <div className={open ? style.mainBoxOpen : style.mainBoxClose}>
             <div className={`${style.fixed} ${open ? style.fixedOpen : style.fixedClose}`}>
-                <div className={open ? style.buttonsOpen : style.buttonsClose}>
-                    <ToggleButtonGroup color="primary" aria-label="text alignment">
-                        <ToggleButton>
-                            <PrintIcon />
-                        </ToggleButton>,
-                        <ToggleButton >
-                            <Filter3Icon />
-                        </ToggleButton>,
-                        <ToggleButton>
-                            <Filter4Icon />
-                        </ToggleButton>,
-                        <ToggleButton >
-                            <FileDownloadIcon />
-                        </ToggleButton>
-                    </ToggleButtonGroup >
-                </div>
                 <div onClick={() => setOpen(!open)} className={`${style.trigger} ${open ? style.triggerClose : style.triggerOpen}`}></div>
-                {props.children}
+                {
+                    DefaultElements.map(e => e)
+                }
             </div>
         </div>
     )
 }
+
+/* 
+
+
+
+*/

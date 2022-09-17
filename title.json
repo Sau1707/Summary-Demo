@@ -1,0 +1,32 @@
+[
+    {
+        "id": "d8f551db-fb7d-456b-8c7e-f478e8ed6bd7",
+        "height": 44,
+        "color": "#C8EF90",
+        "text": 0
+    },
+    {
+        "id": "ce8d7519-3bcf-44ed-881a-a9697d0eefe9",
+        "height": 86,
+        "color": "#DDA5DC",
+        "text": 1
+    },
+    {
+        "id": "573407db-728a-4528-8c81-fd945a4d7298",
+        "height": 96,
+        "color": "#05B49C",
+        "text": 2
+    },
+    {
+        "id": "404306e2-877d-4fe8-a1a1-307792f45ec0",
+        "height": 31,
+        "color": "#F4611C",
+        "text": 3
+    },
+    {
+        "id": "8087a8ce-05f1-4e2e-8e4b-2fba3a9991ce",
+        "height": 51,
+        "color": "#F66BA1",
+        "text": 4
+    }
+]

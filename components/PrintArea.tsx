@@ -26,7 +26,6 @@ import style from './PrintArea.module.css'
 */
 
 
-
 /* id is an unique identifier for the element */
 type Coord = {
     x: number

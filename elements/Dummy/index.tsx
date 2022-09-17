@@ -1,7 +1,8 @@
+import type { ElementData } from "../../types/Element"
 import Dialog from "./Dialog"
 import Dummy from "./Element"
 
-export const DummyType = {
+const DummyType = {
     dialog: Dialog,
     element: Dummy,
     default: {
@@ -9,4 +10,6 @@ export const DummyType = {
         height: 100,
         color: "#171717"
     }
-}
+} as ElementData
+
+export default DummyType;
