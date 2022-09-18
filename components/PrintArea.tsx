@@ -1,7 +1,8 @@
 /* eslint-disable react/no-direct-mutation-state */
+import style from './PrintArea.module.css'
+
 import { Component, createRef } from 'react'
 import Page from './Page'
-import style from './PrintArea.module.css'
 
 /* 
     Print area box, steps:
@@ -31,6 +32,7 @@ type Coord = {
     x: number
     y: number
 }
+
 type Pos = {
     [id: string]: Coord
 }
@@ -117,8 +119,8 @@ export default class Example extends Component<Props> {
                 if (!el) return
                 var rect = el.getBoundingClientRect()
                 this.oldPos[e.id] = {
-                    x: rect.x,
-                    y: rect.y
+                    x: rect.left + document.documentElement.scrollLeft,
+                    y: rect.top + document.documentElement.scrollTop
                 }
             })
         })
@@ -132,7 +134,7 @@ export default class Example extends Component<Props> {
                 const current = e.getBoundingClientRect()
                 const last = this.oldPos[e.id]
                 if (!last) return // if the element don't exist before 
-                const [changeX, changeY] = [last.x - current.x, last.y - current.y]
+                const [changeX, changeY] = [last.x - current.x - document.documentElement.scrollLeft, last.y - current.y - document.documentElement.scrollTop]
                 if (!changeY) return;
 
                 requestAnimationFrame(() => {

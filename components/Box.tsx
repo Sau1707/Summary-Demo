@@ -11,26 +11,13 @@ import { v4 as uuidv4 } from 'uuid';
 */
 
 interface Iprops {
-    data?: any,
+    data: any,
     element: any
 }
 
 export default function Box(props: Iprops) {
-    let myRef = createRef<HTMLDivElement>()
-    let data = {} as any
-    const [open, setOpen] = useState(false)
     const [context] = useContext(GlobalDataContext);
-
-    let tempData = props.data ? props.data : props.element.default
-    tempData.id ? null : tempData.id = uuidv4()
-    data = { ...tempData }
-
-    const onDialogClose = (e: any) => {
-        let updatedList = context.updateElement(data.id, e)
-        if (!updatedList) return
-        context.elementsList = updatedList
-        setOpen(false)
-    }
+    let myRef = createRef<HTMLDivElement>()
 
     useEffect(() => {
         const element = myRef.current!
@@ -39,23 +26,23 @@ export default function Box(props: Iprops) {
         element.addEventListener('transitionend', () => element.style.pointerEvents = "");
     }, [])
 
+    if (!props.element) return <></>
+
     return (
         <div
             draggable
-            id={data.id}
+            id={props.data.id}
             ref={myRef}
-            onDragStart={() => context.onDragStart(data.id)}
+            onDragStart={() => context.onDragStart(props.data.id)}
             onDragOver={(e) => context.onDragOver(e)}
-            onDragEnd={() => context.onDragEnd()}
-            onDoubleClick={() => props.data ? setOpen(true) : null}
+            onDoubleClick={() => props.data ? context.openDialog = props.data.id : null}
         >
-            <props.element.dialog
-                {...data}
-                open={open}
-                onClose={onDialogClose}
-            />
             <props.element.element
-                {...data}
+                {...props.data}
+            />
+            <props.element.dialog
+                {...props.data}
+                open={context.openDialog == props.data.id}
             />
         </div>
     )

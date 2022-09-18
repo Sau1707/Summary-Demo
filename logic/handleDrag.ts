@@ -3,9 +3,10 @@ import type { DragEvent } from "react"
 
 /* Handle drag and drop */
 export function onDragStart(this: GlobalData, i: string) {
+    this.dragElement = {}
     let dragElement = this.getElement(i)
-    console.log(dragElement)
-    if (!dragElement) return
+    /* If element not found, check in the title */
+    if (!dragElement) dragElement = this.generateElement(i)
     this.dragElement = dragElement
 }
 
@@ -24,9 +25,4 @@ export function onDragOver(this: GlobalData, e: DragEvent<HTMLDivElement>) {
     var copy = this.insertElement(this.dragElement, targetIndex! + (overflow ? 0 : 1), true)
     /* Update array */
     this.elementsList = copy
-}
-
-/* Clean drag events */
-export function onDragEnd(this: GlobalData) {
-    this.dragElement = {}
 }

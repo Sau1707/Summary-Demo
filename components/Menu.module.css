@@ -121,3 +121,11 @@
     0% { width: 300px } 
     100% { width: 0px } 
 }
+
+.buttonGroup button {
+    border-color: rgb(133, 133, 133)
+}
+
+.buttonGroup button svg{
+    fill: white
+}

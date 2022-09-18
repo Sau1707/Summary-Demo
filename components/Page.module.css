@@ -9,7 +9,7 @@
     width: 29.85cm;
 
     /* Column settings */
-    column-count: 3;
+    /* column-count: 3; */
     column-rule: 2px solid black;
     overflow: visible;
 

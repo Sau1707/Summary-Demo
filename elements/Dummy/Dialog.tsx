@@ -1,25 +1,21 @@
-import { Dialog, DialogContent, DialogTitle } from '@mui/material';
+import { Dialog, DialogContent, DialogTitle, Slider, Grid, OutlinedInput, Input } from '@mui/material';
 import { Color, ColorPicker, createColor } from "material-ui-color";
-import { styled } from '@mui/material/styles';
-import Slider from '@mui/material/Slider';
-import Grid from '@mui/material/Grid';
-import MuiInput from '@mui/material/Input';
-import OutlinedInput from '@mui/material/OutlinedInput';
-import { useState } from "react"
-import Typography from '@material-ui/core/Typography';
+import { Typography } from '@material-ui/core';
+import { useState, useContext } from "react"
+
+import { GlobalDataContext } from '../../logic/Contex';
 
 import Demo from "./Element"
+import DialogMenu from '../../components/DialogMenu';
 
-const Input = styled(MuiInput)`
-  width: 42px;
-`;
+const [minHeight, maxHeight] = [50, 300]
 
 export default function DummyDialog(props: any) {
+    const [context] = useContext(GlobalDataContext);
 
     const [color, setColor] = useState(createColor(props.color))
     const [height, setHeight] = useState(props.height)
     const [text, setText] = useState(props.text)
-    const [minHeight, maxHeight] = [50, 300]
 
     const handleColorChange = (newValue: Color) => {
         setColor(newValue);
@@ -33,7 +29,6 @@ export default function DummyDialog(props: any) {
         setHeight(event.target.value === '' ? '' : Number(event.target.value));
     };
 
-
     const handleBlur = () => {
         if (height < minHeight) {
             setHeight(minHeight);
@@ -43,7 +38,7 @@ export default function DummyDialog(props: any) {
     };
 
     const handleDialogClose = () => {
-        props.onClose({
+        context.saveDialog({
             color: `#${color.hex}`,
             height: height,
             text: text,
@@ -62,11 +57,14 @@ export default function DummyDialog(props: any) {
             onClose={handleDialogClose}
         >
             <DialogTitle> Demo element </DialogTitle>
+            <DialogMenu
+                id={props.id}
+                onSave={handleDialogClose}
+            />
             <DialogContent>
                 <Grid container spacing={8} alignItems="center">
                     <Grid item>
                         <Typography >Text: </Typography>
-
                         <OutlinedInput value={text} onChange={handleTextChange} />
                     </Grid>
                     <Grid item>
@@ -87,8 +85,8 @@ export default function DummyDialog(props: any) {
                                     type: 'number',
                                     'aria-labelledby': 'input-slider',
                                 }}
-                            /></Typography>
-
+                            />
+                        </Typography>
                         <Slider
                             value={typeof height === 'number' ? height : 0}
                             onChange={handleHeightChange}

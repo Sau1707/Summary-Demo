@@ -1,16 +1,15 @@
 /* eslint-disable react/no-direct-mutation-state */
 import { Component, createContext } from "react"
-import { v4 as uuidv4 } from 'uuid';
-
-import { onDragStart, onDragOver, onDragEnd } from "./handleDrag"
-import { getIndex, getElement, insertElement, updateElement } from "./util"
-import { LoadTitles } from "./setup"
-/* For demo use */
-import data from "../data.json"
-
 import type { ElementSettings } from "../types/Element"
 
-type Sizes = "book" | "2" | "3" | "4"
+import { onDragStart, onDragOver } from "./handleDrag"
+import { getIndex, getElement, insertElement, updateElement, generateElement, deleteElement } from "./util"
+import { LoadTitles } from "./setup"
+
+
+/* For demo use */
+import data from "../data.json"
+type Sizes = 2 | 3 | 4 | 5
 
 export const GlobalDataContext = createContext<[GlobalData]>(undefined!)
 
@@ -30,7 +29,8 @@ export default class GlobalData extends Component {
     titleList = {} as ElementSettings
     state = {
         elementsList: data as Array<any>, // array containing the structure
-        size: "book" as Sizes
+        size: 2 as Sizes,
+        dialog: ""
     }
 
     /* Getter and setter for get and update elementList */
@@ -44,16 +44,63 @@ export default class GlobalData extends Component {
         })
     }
 
+    /* Number of pages */
+    get pagesCount() {
+        return this.state.size
+    }
+
+    set pagesCount(newValue: string | Sizes) {
+        switch (newValue) {
+            case "large": case 2:
+                this.setState({ size: 2 })
+                break
+            case "medium": case 3:
+                this.setState({ size: 3 })
+                break
+            case "small": case 4:
+                this.setState({ size: 4 })
+                break
+            case "tiny": case 5:
+                this.setState({ size: 5 })
+                break
+        }
+    }
+
+    increasePageCount(n = 1) {
+        let newSize = (this.state.size + n) % 6
+        if (newSize == 0) newSize = 2
+        this.pagesCount = newSize as Sizes
+    }
+
+    get openDialog() {
+        return this.state.dialog
+    }
+
+    set openDialog(newValue) {
+        this.setState({
+            dialog: newValue
+        })
+    }
+
+    saveDialog(newProps: object) {
+        let updatedList = this.updateElement(this.state.dialog, newProps)
+        if (!updatedList) return
+        this.elementsList = updatedList
+        this.openDialog = ""
+    }
+
     /* Util function for array search and update*/
     public getIndex = getIndex;
     public getElement = getElement;
     public insertElement = insertElement;
     public updateElement = updateElement;
+    public deleteElement = deleteElement;
+    public generateElement = generateElement;
 
     /* handle drag*/
     public onDragStart = onDragStart;
     public onDragOver = onDragOver;
-    public onDragEnd = onDragEnd;
+
 
     render() {
         return (
@@ -63,15 +110,3 @@ export default class GlobalData extends Component {
         )
     }
 }
-
-/* 
-createElement(type: string) {
-    if (type == "title") return {
-        "id": uuidv4(),
-        "height": Math.random() * (200 - 50) + 50,
-        "color": `#${Math.floor(Math.random() * 16777215).toString(16)}`,
-        "number": (Math.random() + 1).toString(36).substring(7)
-    }
-}
-
-*/

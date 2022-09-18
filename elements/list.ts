@@ -1,10 +1,10 @@
-import type { ElementSettings } from "../types/Element"
+import type { ElementSettings, ElementData } from "../types/Element"
 
 import DummyType from "./Dummy"
 
 const elements = {
-    "dummy" : DummyType,
-    "test": DummyType
+    "dummy" : DummyType as ElementData,
+    "test": DummyType as ElementData
 }
 
 export default elements as ElementSettings
